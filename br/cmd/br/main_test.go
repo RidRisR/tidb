@@ -20,7 +20,18 @@ import (
 	"os"
 	"strings"
 	"testing"
+
+	"go.uber.org/goleak"
 )
+
+func TestMain(m *testing.M) {
+	goleak.VerifyTestMain(m, 
+		goleak.IgnoreCurrent(),
+		goleak.IgnoreAnyFunction("net/http.(*persistConn).writeLoop"),
+		goleak.IgnoreAnyFunction("net/http.(*persistConn).readLoop"),
+	)
+	os.Exit(m.Run())
+}
 
 func TestRunMain(*testing.T) {
 	var args []string
