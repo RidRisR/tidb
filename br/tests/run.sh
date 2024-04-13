@@ -38,7 +38,8 @@ rm -rf $TEST_DIR && mkdir -p $TEST_DIR
 # Generate TLS certs
 generate_certs &> /dev/null
 
-SELECTED_TEST_NAME="${TEST_NAME-$(find tests -mindepth 2 -maxdepth 2 -name run.sh | cut -d/ -f2 | sort)}"
+# SELECTED_TEST_NAME="${TEST_NAME-$(find tests -mindepth 2 -maxdepth 2 -name run.sh | cut -d/ -f2 | sort)}"
+SELECTED_TEST_NAME="br_300_small_tables"
 
 trap stop_services EXIT
 start_services $@

@@ -16,8 +16,16 @@
 
 set -eux
 
-br.test -test.coverprofile="$COV_DIR/cov.$TEST_NAME.$$.out.log" DEVEL "$@" \
-    -L "info" \
-    --ca "$TEST_DIR/certs/ca.pem" \
-    --cert "$TEST_DIR/certs/br.pem" \
-    --key "$TEST_DIR/certs/br.key"
+# br.test -test.coverprofile="$COV_DIR/cov.$TEST_NAME.$$.out.log" DEVEL "$@" \
+#     -L "info" \
+#     --ca "$TEST_DIR/certs/ca.pem" \
+#     --cert "$TEST_DIR/certs/br.pem" \
+#     --key "$TEST_DIR/certs/br.key"
+
+dlv exec /root/tidb/bin/br.test --listen=:2345 --headless=true --api-version=2 --accept-multiclient \
+    --init=/root/tidb/init.txt \
+  -- -test.coverprofile="$COV_DIR/cov.$TEST_NAME.$$.out.log" DEVEL "$@"\
+  -L "info" \
+  --ca "$TEST_DIR/certs/ca.pem" \
+  --cert "$TEST_DIR/certs/br.pem" \
+  --key "$TEST_DIR/certs/br.key"

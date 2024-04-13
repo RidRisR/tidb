@@ -27,8 +27,9 @@ import (
 func TestMain(m *testing.M) {
 	goleak.VerifyTestMain(m, 
 		goleak.IgnoreCurrent(),
-		goleak.IgnoreAnyFunction("net/http.(*persistConn).writeLoop"),
-		goleak.IgnoreAnyFunction("net/http.(*persistConn).readLoop"),
+		goleak.IgnoreTopFunction("github.com/pingcap/tidb/br/pkg/utils.StartExitSingleListener.func1"),
+		goleak.IgnoreTopFunction("github.com/pingcap/tidb/br/pkg/utils.StartDynamicPProfListener.func1"),
+		goleak.IgnoreTopFunction("gopkg.in/natefinch/lumberjack%2ev2.(*Logger).millRun"),
 	)
 	os.Exit(m.Run())
 }
