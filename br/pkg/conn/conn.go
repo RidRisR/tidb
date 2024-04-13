@@ -318,6 +318,10 @@ func (mgr *Mgr) ProcessTiKVConfigs(ctx context.Context, cfg *kvconfig.KVConfig, 
 		if err != nil {
 			return err
 		}
+		err = resp.Body.Close()
+		if err != nil {
+			return err
+		}
 		if !mergeRegionSize.Modified || !mergeRegionKeyCount.Modified {
 			size, keys, e := kvconfig.ParseMergeRegionSizeFromConfig(respBytes)
 			if e != nil {
@@ -385,7 +389,6 @@ func (mgr *Mgr) GetConfigFromTiKV(ctx context.Context, cli *http.Client, fn func
 			if err != nil {
 				return err
 			}
-			_ = resp.Body.Close()
 			return nil
 		}, utils.NewPDReqBackoffer())
 		if err != nil {

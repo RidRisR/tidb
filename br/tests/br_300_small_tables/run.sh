@@ -82,7 +82,7 @@ done
 
 rm -rf $RESTORE_LOG
 echo "restore 1/300 of the table start..."
-run_br restore table --db $DB  --table "sbtest100" --log-file $RESTORE_LOG -s "local://$TEST_DIR/$DB" --pd $PD_ADDR --no-schema
+run_br_dlv restore table --db $DB  --table "sbtest100" --log-file $RESTORE_LOG -s "local://$TEST_DIR/$DB" --pd $PD_ADDR --no-schema
 restore_size=`grep "restore-data-size" "${RESTORE_LOG}" | grep -oP '\[\K[^\]]+' | grep "restore-data-size" | awk -F '=' '{print $2}' | grep -oP '\d*\.?\d+'`
 echo "restore data size is ${restore_size}"
 

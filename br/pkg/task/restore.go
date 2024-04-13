@@ -732,6 +732,7 @@ func runRestore(c context.Context, g glue.Glue, cmdName string, cfg *RestoreConf
 	// we should get the real config from tikv to adapt the dynamic region.
 	httpCli := httputil.NewClient(mgr.GetTLSConfig())
 	mgr.ProcessTiKVConfigs(ctx, kvConfigs, httpCli)
+	httpCli.CloseIdleConnections()
 
 	keepaliveCfg.PermitWithoutStream = true
 	client := restore.NewRestoreClient(mgr.GetPDClient(), mgr.GetPDHTTPClient(), mgr.GetTLSConfig(), keepaliveCfg)

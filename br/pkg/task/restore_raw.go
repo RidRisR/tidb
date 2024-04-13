@@ -85,6 +85,7 @@ func RunRestoreRaw(c context.Context, g glue.Glue, cmdName string, cfg *RestoreR
 		// we should get the real config from tikv to adapt the dynamic region.
 		httpCli := httputil.NewClient(mgr.GetTLSConfig())
 		mgr.ProcessTiKVConfigs(ctx, kvConfigs, httpCli)
+		httpCli.CloseIdleConnections()
 	}
 
 	keepaliveCfg := GetKeepalive(&cfg.Config)
