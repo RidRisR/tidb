@@ -1222,7 +1222,7 @@ func EstimateTiflashUsage(tables []*metautil.Table, storeCnt int) uint64 {
 	}
 	var tiflashTotal uint64 = 0
 	for _, table := range tables {
-		if table.TiFlashReplicas <= 0 {
+		if table.Info.TiFlashReplica.Count <= 0 {
 			continue
 		}
 		tableBytes := uint64(0)
