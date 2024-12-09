@@ -689,7 +689,6 @@ func TestAddTaskWithLongRunTask1(t *testing.T) {
 	})
 	c.advanceClusterTimeBy(3 * time.Minute)
 	c.advanceCheckpointBy(2 * time.Minute)
-	env.advanceCheckpointBy(1 * time.Minute)
 	adv.StartTaskListener(ctx)
 	// Try update checkpoint
 	require.NoError(t, adv.OnTick(ctx))
@@ -729,7 +728,7 @@ func TestAddTaskWithLongRunTask2(t *testing.T) {
 	})
 	c.advanceClusterTimeBy(3 * time.Minute)
 	c.advanceCheckpointBy(1 * time.Minute)
-	env.advanceCheckpointBy(2 * time.Minute)
+	// env.advanceCheckpointBy(2 * time.Minute)
 	env.mockPDConnectionError()
 	adv.StartTaskListener(ctx)
 	// Try update checkpoint

@@ -686,6 +686,10 @@ func (t *testEnv) UploadV3GlobalCheckpointForTask(ctx context.Context, _ string,
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
+	if !t.connectPD() {
+		return status.Error(codes.Unavailable, "pd disconnected")
+	}
+
 	if checkpoint < t.checkpoint {
 		t.testCtx.Fatalf("checkpoint rolling back (from %d to %d)", t.checkpoint, checkpoint)
 	}
@@ -695,6 +699,10 @@ func (t *testEnv) UploadV3GlobalCheckpointForTask(ctx context.Context, _ string,
 
 func (t *testEnv) mockPDConnectionError() {
 	t.pdDisconnected.Store(true)
+}
+
+func (t *testEnv) restorePDConnection() {
+	t.pdDisconnected.Store(false)
 }
 
 func (t *testEnv) connectPD() bool {
@@ -721,6 +729,10 @@ func (t *testEnv) ClearV3GlobalCheckpointForTask(ctx context.Context, taskName s
 }
 
 func (t *testEnv) PauseTask(ctx context.Context, taskName string) error {
+	if !t.connectPD() {
+		return status.Error(codes.Unavailable, "pd disconnected")
+	}
+	
 	t.taskCh <- streamhelper.TaskEvent{
 		Type: streamhelper.EventPause,
 		Name: taskName,

@@ -595,7 +595,7 @@ func (c *CheckpointAdvancer) importantTick(ctx context.Context) error {
 		return errors.Annotate(err, "failed to check timestamp")
 	}
 	if isLagged {
-		err := c.env.PauseTask(ctx, c.task.Name)
+		err := c.PauseLaggedTask(ctx)
 		if err != nil {
 			return errors.Annotate(err, "failed to pause task")
 		}
@@ -678,6 +678,25 @@ func (c *CheckpointAdvancer) tick(ctx context.Context) error {
 	}
 
 	return errs
+}
+
+func (c *CheckpointAdvancer) PauseLaggedTask(ctx context.Context) error {
+	metaValue, err := c.env.GetGlobalCheckpointForTask(ctx, c.task.Name)
+	if err != nil {
+		return err
+	}
+
+	if c.lastCheckpoint.TS != metaValue {
+		log.Warn("skipping pause task, local checkpoint is behind meta", zap.String("category", "log backup advancer"),
+			zap.Uint64("meta", metaValue), zap.Uint64("local", c.lastCheckpoint.TS))
+		return nil
+	}
+
+	
+	if err:= c.env.PauseTask(ctx, c.task.Name); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c *CheckpointAdvancer) asyncResolveLocksForRanges(ctx context.Context, targets []spans.Valued) {
