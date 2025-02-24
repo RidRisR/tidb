@@ -637,7 +637,9 @@ func runRestore(c context.Context, g glue.Glue, cmdName string, cfg *RestoreConf
 		}
 	} else if !client.IsIncremental() && cfg.CheckRequirements {
 		if err = checkTableExistence(ctx, mgr, tables, g); err != nil {
+			log.Info("do not merge!")
 			return errors.Trace(err)
+			
 		}
 	}
 
